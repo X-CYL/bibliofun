@@ -1,2 +1,4 @@
 retirer la containt FK8 de format ainsi que size_id FAIT
 dans format maison edition ajouter la containte size_id (l'appeler FK8) FAIT
+
+il faut supprimer la table genre qui fait doublon avec book_genre qui lui est a conserver FAIT pas besoin, book_genre est la table de liaison

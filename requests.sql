@@ -92,6 +92,9 @@ ALTER TABLE `books`
 ALTER TABLE `auteur`
     ADD CONSTRAINT FK7 FOREIGN KEY(edition_id) REFERENCES edition(edition_id);
 
+ALTER TABLE `auteur`
+DROP FOREIGN KEY FK7;
+
 ALTER TABLE `format_maison_edition`
     ADD CONSTRAINT FK8 FOREIGN KEY(size_id) REFERENCES sizes(size_id);
 
@@ -101,32 +104,16 @@ INSERT INTO auteur(nom, prenom)
 VALUES ("CHAVANNE", "Philippe");
 
 INSERT INTO edition(edition)
-VALUES ("POCKET"),
-       ("POINTS POESIE"),
-       ("LES ARENES");
+VALUES ("DE NOYELLES");
 
 INSERT INTO genre(genre)
-VALUES ("AVENTURE"),
-       ("FICTION"),
-       ("ANTICIPATION"),
-       ("ESSAIS"),
-       ("POESIE"),
-       ("GUERRE"),
-       ("ROMANTIQUE"),
-       ("REVUE ARTISTIQUE"),
-       ("ROMANCE"),
-       ("THRILLER");
+VALUES ("MUSIQUE");
 
 INSERT INTO format(type_format)
 VALUES ("Bande dessinée");
 
 INSERT INTO users (name, surname, e_mail, password, pseudo, date)
-VALUES ("SCHIARATURA","Jimmy","jimmy.schiaratura@gmail.com","lejim","CLONESCODY",now()),
-       ("SCHIARATURA","Marie_sarah","ms.galeocerdo@gmail.com","cormoran","LA PIAF",now()),
-       ("STRECK","Antoine","astreck@rabotdutilleul.com","transporteur","SHRECK",now()),
-       ("CROWET","Leo","lcrowet@rabotdutilleul.com","lesgruesatour","GRUTMAN",now()),
-       ("PERONCZYK","Jean-Francois","jf@gmail.com","mercedes","GRAND",now()),
-       ("LAFINEUR","Joseph","joseph.lafineur@orange.fr","12345","LAF",now());
+VALUES ("DELANOE","Romain","rdelanoe@compuserve.com","politique12","LA LOI",now());
 
 
 INSERT INTO books (titre, nombre_de_pages, numero_IBSN, pitch, date_enregistrement, partage, auteur_id, user_id)
@@ -137,9 +124,29 @@ VALUES ("Quitter le monde", 694, "978-2-266-19996-4","Je ne marierais jamais et 
        ("Itinéraire d'un naufragé", 473, "978-2-7578-9507-8", "Intégrale de ses chansons précédé d'un entretient exclusif", now(), TRUE, 10, 1);
 
 INSERT INTO sizes(size)
-VALUES("10 X 15"),
-      ("10 X 20"),
-      ("12 X 20");
+VALUES("21 X 29,7"),
+      ("10 X 10"),
+      ("15,5 X 23,5"),
+      ("11,5 X 15,5"),
+      ("12,5 X 20");
+
+INSERT INTO format_maison_edition (format_id, edition_id, size_id)
+VALUES(1, 2, 2),
+      (1, 4, 2),
+      (1, 7, 1),
+      (4, 9, 4),
+      (3, 5, 7);
+
+INSERT INTO book_genre (book_id, genre_id)
+VALUES(1, 4),
+      (2, 10),
+      (3, 11),
+      (4, 10),
+      (5, 2),
+      (6, 1),
+      (7, 12),
+      (8, 13),
+      (9, 14);
 
 #select all datas from tables request
 
@@ -166,14 +173,18 @@ SET auteur_id = 16
 WHERE auteur_id = 1;
 
 UPDATE auteur
-SET edition_id = 6
-WHERE auteur_id = 8;
+SET edition_id = 5
+WHERE auteur_id = 16;
 
 
 UPDATE format
 SET type_format = "Broché"
 WHERE format_id = 3;
 
+
 #remaiming table request
 
 RENAME TABLE format_size TO sizes;
+
+#creating requests
+
