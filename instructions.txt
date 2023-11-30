@@ -1,0 +1,2 @@
+retirer la containt FK8 de format ainsi que size_id FAIT
+dans format maison edition ajouter la containte size_id (l'appeler FK8) FAIT
