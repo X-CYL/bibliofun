@@ -1,4 +1,23 @@
-retirer la containt FK8 de format ainsi que size_id FAIT
-dans format maison edition ajouter la containte size_id (l'appeler FK8) FAIT
+requête 1
+-sortir la liste de tous les livres filtré par auteur dans l' ordre croissant FAIT
+requête 2
+-liste de tous les livres filtrés par format dans l ordre croissant FAIT
+requête 3
+-sortir les livres par auteur, format, edition et size, trier par edition croissant FAIT
+requête 4
+-sortir la liste de tous les livres par peudo filtrer par auteur dans l'ordre croissant FAIT
+requête 5
+-sortir les livres likés triés par auteur par ordre croissant FAIT
+requête 6
+-sortir les livres likés triés par auteur par ordre croissant FAIT, 
+-condenser les lignes avec total de likes par lignes
+requête 7
+-sortir les 4 derniers livres enregistrés
+requête 8
+-sortir les 4 livres les plus likés dans l'ordre décroissant
 
-il faut supprimer la table genre qui fait doublon avec book_genre qui lui est a conserver FAIT pas besoin, book_genre est la table de liaison
+ADMIN
+requête 1
+-sortir la liste de tous les users avec leur adresse et pseudos filtrer par nom et par ordre alphabetique
+requête 2
+

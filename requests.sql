@@ -1,4 +1,4 @@
--- Active: 1701286856888@@mysql-x-cyl.alwaysdata.net@3306@x-cyl_bibliofun
+-- Active: 1701946869658@@mysql-x-cyl.alwaysdata.net@3306@x-cyl_bibliofun
 CREATE DATABASE bibliofun;
 
 SHOW DATABASES;
@@ -37,6 +37,10 @@ CREATE TABLE `edition` (`edition_id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 CREATE TABLE `auteur` (`auteur_id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                     `nom` VARCHAR(50) NOT NULL,
                     `prenom` VARCHAR(50) NOT NULL);
+
+CREATE TABLE `likes` (like_id INT PRIMARY KEY AUTO_INCREMENT,
+                      user_id INT,
+                      book_id INT);
 
 CREATE TABLE book_genre (
                         book_genre_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -98,6 +102,19 @@ DROP FOREIGN KEY FK7;
 ALTER TABLE `format_maison_edition`
     ADD CONSTRAINT FK8 FOREIGN KEY(size_id) REFERENCES sizes(size_id);
 
+ALTER TABLE `likes`
+    ADD CONSTRAINT FK9 FOREIGN KEY(users_id) REFERENCES users(users_id),
+    ADD CONSTRAINT FK10 FOREIGN KEY(book_id) REFERENCES books(book_id);
+
+ALTER TABLE `likes`
+DROP CONSTRAINT FK10;
+
+ALTER TABLE `likes`
+CHANGE user_id users_id INT;
+
+ALTER TABLE `likes`
+ADD liked BOOLEAN DEFAULT FALSE;
+
 #adding datas for test functionalities and requests
 
 INSERT INTO auteur(nom, prenom)
@@ -131,11 +148,11 @@ VALUES("21 X 29,7"),
       ("12,5 X 20");
 
 INSERT INTO format_maison_edition (format_id, edition_id, size_id)
-VALUES(1, 2, 2),
-      (1, 4, 2),
-      (1, 7, 1),
-      (4, 9, 4),
-      (3, 5, 7);
+VALUES(3, 1, 3),
+      (3, 10, 6),
+      (2, 10, 5),
+      (2, 6, 5),
+      (3, 8, 8);
 
 INSERT INTO book_genre (book_id, genre_id)
 VALUES(1, 4),
@@ -147,6 +164,20 @@ VALUES(1, 4),
       (7, 12),
       (8, 13),
       (9, 14);
+
+DELETE FROM likes;
+
+INSERT INTO likes (users_id, book_id, liked)
+VALUES (2, 1, 1),
+       (2, 4, 1),
+       (1, 4, 1),
+       (5, 6, 1),
+       (5, 2, 1),
+       (7, 9, 1),
+       (1, 9, 1),
+       (1, 7, 1),
+       (6, 9, 1),
+       (7, 1, 1);
 
 #select all datas from tables request
 
@@ -166,6 +197,8 @@ SELECT * FROM sizes;
 
 SELECT * FROM format_maison_edition;
 
+SELECT * FROM likes;
+
 #update datas request
 
 UPDATE books
@@ -182,9 +215,97 @@ SET type_format = "Broché"
 WHERE format_id = 3;
 
 
-#remaiming table request
+#renaiming table request
 
 RENAME TABLE format_size TO sizes;
 
-#creating requests
+#creating requests for product
+
+#liste de tous les livres filtrés par auteur par ordre croissant
+SELECT 
+b.titre,
+a.nom, 
+a.prenom
+FROM `books` AS b
+INNER JOIN `auteur` AS a ON a.auteur_id = b.auteur_id
+ORDER BY b.titre;
+
+#liste de tous les livres filtrés par format dans l ordre croissant
+
+SELECT 
+b.titre,
+a.nom, 
+a.prenom,
+f.type_format
+FROM `books` AS b
+INNER JOIN `auteur` AS a ON a.auteur_id = b.auteur_id
+INNER JOIN `edition` AS ed ON a.edition_id = ed.edition_id
+INNER JOIN `format_maison_edition` AS fme ON ed.edition_id = fme.edition_id
+INNER JOIN `format` AS f ON fme.format_id = f.format_id
+INNER JOIN `sizes` AS s ON fme.size_id = s.size_id
+ORDER BY f.type_format;
+
+#sortir les livres par auteur, format, edition et size, trier par edition croissant
+
+SELECT 
+b.titre,
+a.nom, 
+a.prenom,
+ed.edition,
+f.type_format,
+s.size
+FROM `books` AS b
+INNER JOIN `auteur` AS a ON a.auteur_id = b.auteur_id
+INNER JOIN `edition` AS ed ON a.edition_id = ed.edition_id
+INNER JOIN `format_maison_edition` AS fme ON ed.edition_id = fme.edition_id
+INNER JOIN `format` AS f ON fme.format_id = f.format_id
+INNER JOIN `sizes` AS s ON fme.size_id = s.size_id
+ORDER BY ed.edition;
+
+#sortir les livres enregistrés par pseudo et trier par pseudo dans l'ordre croissant
+
+SELECT
+b.titre,
+u.pseudo
+FROM `books` AS b
+INNER JOIN `users` AS u ON b.user_id = u.users_id
+ORDER BY u.pseudo;
+
+#sortir la liste des livres likes filtrer par auteur dans l'ordre croissant
+#condenser les lignes likées avec le total de likes par titre
+
+SELECT 
+a.nom,
+a.prenom,
+b.titre,
+u.name,
+u.surname,
+l.liked
+FROM likes AS l
+INNER JOIN `books` AS b ON l.book_id = b.book_id
+INNER JOIN `users` AS u ON l.users_id = u.users_id
+INNER JOIN `auteur` AS a ON b.auteur_id = a.auteur_id
+ORDER BY a.nom;
+
+#Condenser les lignes les plus likées avec somme des likes par ligne
+
+SELECT 
+a.nom,
+a.prenom,
+b.titre,
+u.name,
+u.surname,
+l.liked,
+COUNT(l.liked) AS total_likes
+FROM likes AS l
+INNER JOIN `books` AS b ON l.book_id = b.book_id
+INNER JOIN `users` AS u ON l.users_id = u.users_id
+INNER JOIN `auteur` AS a ON b.auteur_id = a.auteur_id
+ORDER BY a.nom;
+
+
+
+
+
+
 
